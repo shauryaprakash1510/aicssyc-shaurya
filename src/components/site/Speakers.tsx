@@ -9,7 +9,6 @@ const photoMap: Record<string, string> = {
   utkarsh: "/utkarsh.jpeg",
   shivam: "/shivam.jpeg",
   nikky: "/nikky.jpeg",
-  kapil: "/kapil.png",
   sarun: "/sarun.png",
 };
 
@@ -26,7 +25,7 @@ const speakerPool = [
   ...speakersData.speakers,
 ];
 
-const displayOrder = ["eric", "andrew", "shivam", "utkarsh", "nikky", "kapil", "sarun"];
+const displayOrder = ["eric", "andrew", "shivam", "utkarsh", "nikky", "sarun"];
 const allSpeakers = displayOrder
   .map((key) => speakerPool.find((s) => s.photo === key))
   .filter((s): s is (typeof speakerPool)[number] => Boolean(s));
@@ -64,17 +63,19 @@ export function Speakers() {
           </h2>
         </Reveal>
 
-        <CardGrid className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-x-6 gap-y-12 md:gap-x-8" stagger={0.08}>
+        <CardGrid className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-12 md:gap-x-8" stagger={0.08}>
           {allSpeakers.map((s) => (
             <motion.div
               key={s.name}
               variants={itemVariants}
-              className="group relative"
+              className="group relative flex flex-col h-full"
             >
               <Avatar initials={s.initials} photo={s.photo} name={s.name} />
-              <div className="pt-5">
-                <p className="font-display text-lg text-ivory leading-tight">{s.name}</p>
-                <p className="text-xs text-ivory/65 mt-1.5 leading-snug">{s.org}</p>
+              <div className="pt-4 flex flex-col flex-1 justify-between">
+                <div>
+                  <p className="font-display text-base md:text-lg text-ivory leading-tight">{s.name}</p>
+                  <p className="text-xs text-ivory/65 mt-1.5 leading-snug">{s.org}</p>
+                </div>
                 <a
                   href={s.linkedin}
                   target="_blank"

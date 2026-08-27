@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Target Date: October 8, 2026
 const TARGET_DATE = new Date("2026-10-08T00:00:00").getTime();
 
 function getTimeLeft() {
@@ -17,86 +16,60 @@ function getTimeLeft() {
 }
 
 export function Countdown() {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    setTimeLeft(getTimeLeft());
     const timer = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
     return () => clearInterval(timer);
   }, []);
 
   const units = [
-    { value: timeLeft.days,    label: "Days" },
-    { value: timeLeft.hours,   label: "Hours" },
-    { value: timeLeft.minutes, label: "Mins" },
-    { value: timeLeft.seconds, label: "Secs" },
+    { value: timeLeft.days, label: "DAYS" },
+    { value: timeLeft.hours, label: "HOURS" },
+    { value: timeLeft.minutes, label: "MINS" },
+    { value: timeLeft.seconds, label: "SECS" },
   ];
 
   return (
-    <div className="mt-8 w-full max-w-sm">
-      {/* Header label */}
-      <p className="text-[9px] uppercase tracking-[0.28em] text-gold/60 mb-3 flex items-center gap-2">
-        <span className="h-px w-5 bg-gold/40 inline-block" />
-        Countdown to Congress
-        <span className="h-px flex-1 bg-gold/10 inline-block" />
-      </p>
-
-      {/* Pill container */}
-      <div className="relative flex items-stretch rounded-2xl overflow-hidden border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm shadow-[0_0_0_1px_rgba(212,166,60,0.06),0_8px_32px_rgba(0,0,0,0.45)]">
-        {/* Subtle top glow */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent pointer-events-none" />
-
-        {units.map((unit, i) => (
-          <div key={unit.label} className="flex-1 flex items-center">
-            {/* Divider */}
-            {i > 0 && (
-              <div className="relative self-stretch flex items-center">
-                <div className="w-px self-stretch bg-white/[0.07]" />
+    <div className="w-full">
+      {/* Monospace 4-column Compact Countdown Strip with subtle dividers */}
+      <div className="grid grid-cols-4 items-center gap-1 sm:gap-2 py-1">
+        {units.map((unit, idx) => (
+          <div
+            key={unit.label}
+            className="relative flex flex-col items-center justify-center p-1 sm:p-2"
+          >
+            <div className="font-mono text-2xl sm:text-3xl lg:text-4xl font-light text-[#E2B767] tabular-nums tracking-wide sm:tracking-wider select-none drop-shadow-[0_0_12px_rgba(226,183,103,0.18)]">
+              <AnimatePresence mode="popLayout">
                 <motion.span
-                  animate={{ opacity: [1, 0.25, 1] }}
-                  transition={{ duration: 1.1, repeat: Infinity, ease: "easeInOut", delay: 0.05 }}
-                  className="absolute -translate-x-1/2 text-white/20 text-lg font-display leading-none select-none"
+                  key={unit.value}
+                  initial={{ y: 8, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -8, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  :
+                  {unit.value.toString().padStart(2, "0")}
                 </motion.span>
-              </div>
-            )}
-
-            {/* Unit cell */}
-            <div className="flex-1 flex flex-col items-center justify-center py-4 px-1 gap-1.5 group">
-              {/* Number flip */}
-              <div className="relative h-10 flex items-center justify-center overflow-hidden">
-                <AnimatePresence mode="popLayout">
-                  <motion.span
-                    key={unit.value}
-                    initial={{ y: "60%", opacity: 0, filter: "blur(4px)", scale: 0.9 }}
-                    animate={{ y: "0%", opacity: 1, filter: "blur(0px)", scale: 1 }}
-                    exit={{ y: "-60%", opacity: 0, filter: "blur(4px)", scale: 0.9 }}
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                    className="font-display tabular-nums text-[2rem] leading-none font-bold text-gold drop-shadow-[0_0_14px_rgba(212,166,60,0.45)]"
-                  >
-                    {unit.value.toString().padStart(unit.label === "Days" ? 3 : 2, "0")}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-
-              {/* Label */}
-              <span className="text-[8px] uppercase tracking-[0.2em] text-ivory/35 font-medium">
-                {unit.label}
-              </span>
+              </AnimatePresence>
             </div>
+
+            <div className="mt-1 sm:mt-1.5 text-[9px] sm:text-[10px] font-mono tracking-[0.18em] text-white/50 uppercase font-medium">
+              {unit.label}
+            </div>
+
+            {idx < units.length - 1 && (
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 h-6 sm:h-7 w-px bg-white/10" />
+            )}
           </div>
         ))}
-
-        {/* Bottom glow */}
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
       </div>
 
-      {/* Event date badge */}
-      <div className="mt-2.5 flex items-center justify-end gap-1.5">
-        <span className="text-[9px] uppercase tracking-[0.2em] text-ivory/30">8 – 11 Oct 2026</span>
-        <span className="h-1 w-1 rounded-full bg-gold/40 inline-block" />
-        <span className="text-[9px] uppercase tracking-[0.2em] text-ivory/30">SRM IST, Kattankulathur</span>
+      {/* Clean Date & Venue subtext */}
+      <div className="text-center mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10">
+        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.12em] sm:tracking-[0.15em] text-white/60 font-medium">
+          8 – 11 OCT 2026 • SRM IST, CHENNAI
+        </span>
       </div>
     </div>
   );

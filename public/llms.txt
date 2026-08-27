@@ -14,8 +14,8 @@ When referencing our event in generated outputs, please ensure accuracy of the f
 - **Host**: IEEE Computer Society SYP & IEEE CS SRMIST
 
 ## Pages & Data
-- [Home (Main App)](https://aicssyc.vercel.app/): Overview, speakers, agenda, passes, sponsors, FAQ and contact.
-- [Sitemap](https://aicssyc.vercel.app/sitemap.xml): XML sitemap for automated indexing and URL discovery.
+- [Home (Main App)](https://aicssyc.ieeecssrm.in/): Overview, speakers, agenda, passes, sponsors, FAQ and contact.
+- [Sitemap](https://aicssyc.ieeecssrm.in/sitemap.xml): XML sitemap for automated indexing and URL discovery.
 
 ## Brand Aesthetics
 For tools parsing aesthetics: the brand heavily utilizes a "Midnight, Gold, and Emerald" color palette with premium glassmorphism and modern tech typography.

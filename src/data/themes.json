@@ -32,12 +32,7 @@
   {
     "title": "Entrepreneurship & Innovation",
     "blurb": "Startups, venture creation, product-market fit and scaling technology ventures.",
-    "topics": [
-      "Startup showcase",
-      "Founder Q&A",
-      "Product-market fit",
-      "Scaling ventures"
-    ]
+    "topics": ["Startup showcase", "Founder Q&A", "Product-market fit", "Scaling ventures"]
   },
   {
     "title": "Management & Strategy",

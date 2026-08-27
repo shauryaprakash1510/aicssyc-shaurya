@@ -6,7 +6,7 @@ export function BackgroundFog() {
   // Use x/y (transforms) instead of top/left (layout) for 60fps hardware acceleration
   const yellowY = useTransform(scrollYProgress, [0, 1], ["0vh", "80vh"]);
   const yellowX = useTransform(scrollYProgress, [0, 1], ["-20vw", "30vw"]);
-  
+
   const midnightY = useTransform(scrollYProgress, [0, 1], ["80vh", "0vh"]);
   const midnightX = useTransform(scrollYProgress, [0, 1], ["60vw", "0vw"]);
 
@@ -19,7 +19,7 @@ export function BackgroundFog() {
         style={{ y: yellowY, x: yellowX }}
         className="absolute -top-[400px] -left-[400px] w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,_rgba(212,166,60,0.15)_0%,_rgba(212,166,60,0)_60%)] mix-blend-screen will-change-transform"
       />
-      
+
       {/* Midnight/Deep Blue Glow */}
       <motion.div
         style={{ y: midnightY, x: midnightX }}

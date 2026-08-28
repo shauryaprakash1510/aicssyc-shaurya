@@ -116,10 +116,17 @@ export function SiteNav() {
           </nav>
 
           {/* Desktop Right CTA */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2.5">
+            <a
+              href="https://aicssyc.ieeecssrm.in/ambassador"
+              className="px-4 py-2 text-xs font-medium text-white/90 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] border border-white/15 hover:border-[#E2B767]/50 rounded-full transition-all flex items-center gap-1.5 min-h-[40px]"
+            >
+              <span>Ambassador</span>
+            </a>
+
             <a
               href="#tickets"
-              className="bg-[#E2B767] hover:bg-[#d6aa5a] text-[#060D0A] font-semibold text-xs px-5 py-2.5 rounded-full flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(226,183,103,0.3)] hover:shadow-[0_0_28px_rgba(226,183,103,0.5)] min-h-[44px] group"
+              className="bg-[#E2B767] hover:bg-[#d6aa5a] text-[#060D0A] font-semibold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 transition-all shadow-[0_0_20px_rgba(226,183,103,0.3)] hover:shadow-[0_0_28px_rgba(226,183,103,0.5)] min-h-[40px] group"
             >
               <span>Get Passes</span>
               <span className="transition-transform group-hover:translate-x-1 font-bold">→</span>
@@ -129,8 +136,15 @@ export function SiteNav() {
           {/* Mobile Right Controls: Compact Pill + Hamburger Toggle */}
           <div className="flex lg:hidden items-center gap-2">
             <a
+              href="https://aicssyc.ieeecssrm.in/ambassador"
+              className="text-[11px] sm:text-xs text-white/90 bg-white/[0.06] border border-white/15 px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-white/10 transition-colors"
+            >
+              Ambassador
+            </a>
+
+            <a
               href="#tickets"
-              className="bg-[#E2B767] hover:bg-[#d6aa5a] text-[#060D0A] font-semibold text-[11px] sm:text-xs px-3 sm:px-4 py-1.5 rounded-full flex items-center gap-1 shadow-[0_0_12px_rgba(226,183,103,0.3)] min-h-[36px]"
+              className="bg-[#E2B767] hover:bg-[#d6aa5a] text-[#060D0A] font-semibold text-[11px] sm:text-xs px-3 sm:px-3.5 py-1.5 rounded-full flex items-center gap-1 shadow-[0_0_12px_rgba(226,183,103,0.3)] min-h-[36px]"
             >
               <span>Passes</span>
               <span className="font-bold text-xs">→</span>
@@ -138,7 +152,7 @@ export function SiteNav() {
 
             <button
               onClick={() => setOpen(!open)}
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-white hover:bg-white/10 active:bg-white/20 transition-colors"
+              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full text-white hover:bg-white/10 active:bg-white/20 transition-colors"
               aria-label={open ? "Close Navigation Menu" : "Open Navigation Menu"}
               aria-expanded={open}
             >
@@ -214,6 +228,15 @@ export function SiteNav() {
 
                 {/* Bottom Sheet CTAs */}
                 <div className="pt-3 border-t border-white/10 flex flex-col gap-2.5">
+                  <a
+                    href="https://aicssyc.ieeecssrm.in/ambassador"
+                    onClick={closeMenu}
+                    className="min-h-[44px] bg-[#E2B767]/15 hover:bg-[#E2B767]/25 text-[#E2B767] border border-[#E2B767]/40 font-semibold py-3 px-5 rounded-2xl text-center text-xs flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(226,183,103,0.15)]"
+                  >
+                    <span>Campus Ambassador</span>
+                    <ArrowRight size={14} />
+                  </a>
+
                   <a
                     href="#tickets"
                     onClick={closeMenu}

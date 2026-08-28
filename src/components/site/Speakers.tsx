@@ -5,6 +5,7 @@ import speakersData from "@/data/speakers.json";
 const photoMap: Record<string, string> = {
   andrew: "/andrew.jpeg",
   eric: "/eric.jpeg",
+  biswarup: "/biswarup.jpeg",
   utkarsh: "/utkarsh.jpeg",
   shivam: "/shivam.jpeg",
   nikky: "/nikky.jpeg",
@@ -24,7 +25,7 @@ const speakerPool = [
   ...speakersData.speakers,
 ];
 
-const displayOrder = ["eric", "andrew", "shivam", "utkarsh", "nikky", "sarun"];
+const displayOrder = ["eric", "andrew", "biswarup", "shivam", "utkarsh", "nikky", "sarun"];
 const allSpeakers = displayOrder
   .map((key) => speakerPool.find((s) => s.photo === key))
   .filter((s): s is (typeof speakerPool)[number] => Boolean(s));

@@ -1,11 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { SiteNav } from '@/components/site/SiteNav'
-import { Footer } from '@/components/site/Footer'
-import { AmbassadorDashboard } from '@/components/ambassador/AmbassadorDashboard'
+import { createFileRoute } from "@tanstack/react-router";
+import { SiteNav } from "@/components/site/SiteNav";
+import { Footer } from "@/components/site/Footer";
+import { AmbassadorDashboard } from "@/components/ambassador/AmbassadorDashboard";
 
-export const Route = createFileRoute('/ambassador')({
+export const Route = createFileRoute("/ambassador")({
   component: AmbassadorRoute,
-})
+});
 
 function AmbassadorRoute() {
   return (
@@ -16,6 +16,5 @@ function AmbassadorRoute() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
-

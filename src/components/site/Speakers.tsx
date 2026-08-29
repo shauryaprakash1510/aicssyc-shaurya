@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
-import { Linkedin } from "lucide-react";
+import { Linkedin, Sparkles } from "lucide-react";
 import speakersData from "@/data/speakers.json";
-import { Reveal, CardGrid, itemVariants } from "./Reveal";
 
 const photoMap: Record<string, string> = {
   andrew: "/andrew.jpeg",
   eric: "/eric.jpeg",
+  biswarup: "/biswarup.jpeg",
   utkarsh: "/utkarsh.jpeg",
   shivam: "/shivam.jpeg",
   nikky: "/nikky.jpeg",
@@ -25,109 +25,120 @@ const speakerPool = [
   ...speakersData.speakers,
 ];
 
-const displayOrder = ["eric", "andrew", "shivam", "utkarsh", "nikky", "sarun"];
+const displayOrder = ["eric", "andrew", "biswarup", "shivam", "utkarsh", "nikky", "sarun"];
 const allSpeakers = displayOrder
   .map((key) => speakerPool.find((s) => s.photo === key))
   .filter((s): s is (typeof speakerPool)[number] => Boolean(s));
 
-function Avatar({ initials, photo, name }: { initials: string; photo?: string; name: string }) {
-  const photoUrl = photo ? photoMap[photo] : undefined;
-  return (
-    <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br from-emerald via-midnight to-midnight-deep flex items-center justify-center">
-      <div aria-hidden className="absolute inset-0 opacity-30" style={{ background: "var(--gradient-atmosphere)" }} />
-      {photoUrl ? (
-        <img
-          src={photoUrl}
-          alt={`Portrait of ${name}`}
-          loading="lazy"
-          className="relative h-full w-full object-cover object-center grayscale-[0.15] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-[1.03]"
-        />
-      ) : (
-        <span className="relative font-display text-5xl md:text-6xl text-gold/90 tracking-tight">
-          {initials}
-        </span>
-      )}
-    </div>
-  );
-}
-
 export function Speakers() {
   return (
-    <section id="speakers" className="relative section-rhythm bg-transparent">
-      <div className="container-editorial">
-        <Reveal direction="up" distance={32} className="max-w-3xl mb-20">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-emerald">The voices</p>
-          <h2 className="mt-6 font-display text-[clamp(2rem,4.5vw,4rem)] leading-[1.02] tracking-tight text-ivory text-balance">
-            Researchers, founders &amp; engineers
-            <span className="editorial-italic text-emerald"> shaping the conversation.</span>
-          </h2>
-        </Reveal>
+    <section
+      id="speakers"
+      className="relative scroll-mt-24 sm:scroll-mt-32 section-rhythm overflow-hidden text-ivory"
+    >
+      {/* Background glow (Constrained for mobile) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[600px] lg:w-[700px] h-[320px] sm:h-[600px] lg:h-[700px] bg-emerald-500/10 rounded-full blur-[100px] sm:blur-[160px] pointer-events-none" />
 
-        <CardGrid className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-12 md:gap-x-8" stagger={0.08}>
-          {allSpeakers.map((s) => (
-            <motion.div
-              key={s.name}
-              variants={itemVariants}
-              className="group relative flex flex-col h-full"
-            >
-              <Avatar initials={s.initials} photo={s.photo} name={s.name} />
-              <div className="pt-4 flex flex-col flex-1 justify-between">
-                <div>
-                  <p className="font-display text-base md:text-lg text-ivory leading-tight">{s.name}</p>
-                  <p className="text-xs text-ivory/65 mt-1.5 leading-snug">{s.org}</p>
-                </div>
-                <a
-                  href={s.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`LinkedIn — ${s.name}`}
-                  className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-ivory/55 hover:text-gold transition"
-                >
-                  <Linkedin size={11} /> Profile
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </CardGrid>
+      <div className="container-editorial relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 lg:mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full glass-pill border border-[#E2B767]/30 text-[11px] sm:text-xs font-mono text-[#E2B767] uppercase tracking-widest mb-3 sm:mb-4"
+          >
+            <Sparkles size={13} />
+            <span>
+              KEYNOTE SPEAKERS <span className="text-[#E2B767]">&amp;</span> LUMINARIES
+            </span>
+          </motion.div>
 
-        <Reveal direction="up" distance={24} className="mt-24">
-          <div className="relative mx-auto max-w-3xl rounded-2xl border border-ivory/10 bg-midnight-deep/40 backdrop-blur-sm px-8 py-12 md:px-14 md:py-16 text-center overflow-hidden">
-            <div aria-hidden className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: "var(--gradient-atmosphere)" }} />
-            <div className="relative">
-              <p className="inline-flex items-center gap-2.5 text-[10px] uppercase tracking-[0.3em] text-gold">
-                <span className="relative inline-flex h-2 w-2 items-center justify-center">
-                  <motion.span
-                    aria-hidden
-                    className="absolute inline-flex h-2 w-2 rounded-full bg-gold"
-                    animate={{ scale: [1, 2.4], opacity: [0.55, 0] }}
-                    transition={{ duration: 2.4, repeat: Infinity, ease: [0.16, 1, 0.3, 1] }}
-                  />
-                  <motion.span
-                    className="relative inline-flex h-2 w-2 rounded-full bg-gold"
-                    animate={{ opacity: [0.85, 1, 0.85], scale: [1, 1.08, 1] }}
-                    transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                </span>
-                Lineup expanding
-              </p>
-              <h3 className="mt-5 font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.05] tracking-tight text-ivory">
-                The stage is still being set.
-                <span className="block editorial-italic text-emerald mt-1">More voices, soon revealed.</span>
-              </h3>
-              <p className="mt-6 text-sm md:text-base text-ivory/70 prose-measure mx-auto leading-relaxed">
-                Each week, new names join the AICSSYC 2026 stage — researchers, founders,
-                policymakers and IEEE leaders shaping the next decade of computing.
-              </p>
-              <a
-                href="#tickets"
-                className="group mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-ivory border-b border-ivory/30 hover:border-gold hover:text-gold pb-1 transition"
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight text-balance"
+          >
+            Voices at the{" "}
+            <span className="font-editorial italic font-normal text-[#E2B767]">Frontier</span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-sm sm:text-base md:text-lg text-white/60 max-w-2xl mx-auto text-center mt-2.5 sm:mt-3 font-sans"
+          >
+            World-class researchers, founders, engineers, and IEEE leaders shaping autonomous
+            systems.
+          </motion.p>
+        </div>
+
+        {/* Adaptive Speakers Grid: 2-col on mobile -> 3-col on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6 lg:gap-8">
+          {allSpeakers.map((speaker, i) => {
+            const photoUrl = speaker.photo ? photoMap[speaker.photo] : undefined;
+            return (
+              <motion.div
+                key={speaker.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
+                className="glass-card glass-card-hover rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 border border-white/10 group flex flex-col justify-between"
               >
-                Be first to know
-                <span className="transition-transform group-hover:translate-x-1">→</span>
-              </a>
-            </div>
-          </div>
-        </Reveal>
+                <div>
+                  <div className="relative aspect-[4/5] rounded-xl sm:rounded-2xl overflow-hidden mb-1.5 sm:mb-2 bg-white/[0.03] border border-white/10">
+                    {photoUrl ? (
+                      <img
+                        src={photoUrl}
+                        alt={speaker.name}
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-500"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center font-serif text-2xl sm:text-4xl text-[#E2B767]">
+                        {speaker.initials}
+                      </div>
+                    )}
+                  </div>
+
+                  <h3 className="text-base sm:text-xl font-serif text-white mt-2.5 sm:mt-4 group-hover:text-[#E2B767] transition-colors leading-tight">
+                    {speaker.name}
+                  </h3>
+
+                  <p className="mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-[#E2B767] tracking-wider uppercase font-mono leading-tight">
+                    {speaker.org}
+                  </p>
+
+                  <p className="mt-2 text-xs text-white/60 leading-relaxed font-sans line-clamp-2 sm:line-clamp-none">
+                    {speaker.focus}
+                  </p>
+                </div>
+
+                <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10 flex items-center justify-between text-xs min-h-[44px]">
+                  <a
+                    href={speaker.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-white/70 hover:text-[#E2B767] active:text-[#E2B767] transition-colors py-2"
+                    aria-label={`${speaker.name} LinkedIn Profile`}
+                  >
+                    <Linkedin size={14} className="shrink-0" />
+                    <span className="hidden sm:inline">LinkedIn Profile</span>
+                    <span className="sm:hidden text-[11px]">LinkedIn</span>
+                  </a>
+                  <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-widest text-white/40">
+                    Keynote
+                  </span>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

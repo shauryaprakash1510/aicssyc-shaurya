@@ -5,69 +5,115 @@ const quickNav = siteConfig.navigation;
 
 export function Footer() {
   return (
-    <footer className="relative bg-transparent text-ivory grain overflow-hidden border-t border-white/10 backdrop-blur-sm">
-      <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-
-      <div className="container-editorial py-16 md:py-20">
-        <div className="grid md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-12 md:gap-10">
-          <div>
-            <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
-              <img src="/logo.png" alt="AICSSYC 2026" className="h-10 sm:h-12 md:h-14 w-auto object-contain shrink-0" />
-              <div className="h-6 sm:h-8 md:h-10 w-px bg-white/20 shrink-0"></div>
-              <a href="https://www.srmist.edu.in/" target="_blank" rel="noopener noreferrer" className="shrink-0">
-                <img src="/srm.png" alt="SRM IST" className="h-8 sm:h-10 md:h-12 w-auto object-contain shrink-0" />
+    <footer className="relative bg-[#060D0A] text-ivory border-t border-white/10 overflow-hidden">
+      <div className="container-editorial relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
+          <div className="sm:col-span-2 md:col-span-1">
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.png"
+                alt="AICSSYC 2026"
+                className="h-8 sm:h-10 w-auto object-contain shrink-0"
+              />
+              <div className="h-6 sm:h-8 w-px bg-white/20 shrink-0" />
+              <a
+                href="https://www.srmist.edu.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block"
+              >
+                <img
+                  src="/srm.png"
+                  alt="SRM IST"
+                  className="h-7 sm:h-8 w-auto object-contain shrink-0"
+                />
               </a>
             </div>
-            <p className="mt-6 text-xs uppercase tracking-[0.24em] text-gold/80">A flagship of</p>
-            <p className="mt-2 font-display text-lg text-ivory/90">IEEE Computer Society SYP</p>
-          </div>
-
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.24em] text-slate-mist mb-5">Venue</p>
-            <p className="text-ivory text-sm leading-relaxed">
-              TP Ganesan Auditorium<br />
-              SRM IST, Kattankulathur<br />
-              Tamil Nadu, India
+            <p className="mt-3 sm:mt-4 text-xs text-slate-mist leading-relaxed font-sans">
+              All India Computer Society Student &amp; Young Professional Congress 2026. Hosted at
+              SRMIST, Kattankulathur, Chennai.
             </p>
-            <p className="mt-4 text-sm text-ivory/70">8 – 11 October 2026</p>
           </div>
 
           <div>
-            <p className="text-[10px] uppercase tracking-[0.24em] text-slate-mist mb-5">Contact</p>
-            <ul className="space-y-2 text-sm">
-              <li><a href="mailto:ieeecomputersocietysrmist@gmail.com" className="text-ivory/75 hover:text-gold break-words transition">ieeecomputersocietysrmist@gmail.com</a></li>
-              <li><a href="https://www.instagram.com/ieeecs_srmist/" target="_blank" rel="noopener noreferrer" className="text-ivory/75 hover:text-gold transition">@ieeecs_srmist (IG)</a></li>
-              <li><a href="https://www.instagram.com/ieeecssyp/" target="_blank" rel="noopener noreferrer" className="text-ivory/75 hover:text-gold transition">@ieeecssyp (IG)</a></li>
-              <li><a href="https://www.linkedin.com/company/ieee-computer-society-syp" target="_blank" rel="noopener noreferrer" className="text-ivory/75 hover:text-gold transition">IEEE CS SYP (IN)</a></li>
-              <li><a href="https://www.linkedin.com/company/ieee-computer-society-srmist" target="_blank" rel="noopener noreferrer" className="text-ivory/75 hover:text-gold transition">IEEE CS SRMIST (IN)</a></li>
+            <h4 className="text-xs font-mono uppercase tracking-widest text-emerald-glow mb-3 sm:mb-4 font-semibold">
+              Venue &amp; Dates
+            </h4>
+            <p className="text-xs text-slate-mist leading-relaxed font-sans">
+              TP Ganesan Auditorium
+              <br />
+              SRM Institute of Science and Technology
+              <br />
+              Kattankulathur, Chennai, Tamil Nadu
+              <br />
+              <span className="text-[#E2B767] font-semibold mt-2 block">October 8–11, 2026</span>
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-mono uppercase tracking-widest text-emerald-glow mb-3 sm:mb-4 font-semibold">
+              Navigation
+            </h4>
+            <ul className="space-y-1.5 sm:space-y-2 text-xs text-slate-mist">
+              {quickNav.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="inline-block py-1 text-slate-mist hover:text-[#E2B767] transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <p className="text-[10px] uppercase tracking-[0.24em] text-slate-mist mb-5">Navigate</p>
-            <ul className="space-y-2 text-sm">
-              {quickNav.map((l) => {
-                const isHash = l.href.startsWith("#");
-                return isHash ? (
-                  <li key={l.href}>
-                    <Link to="/" hash={l.href.slice(1)} className="text-ivory/75 hover:text-gold transition">{l.label}</Link>
-                  </li>
-                ) : (
-                  <li key={l.href}>
-                    <a href={l.href} className="text-ivory/75 hover:text-gold transition">{l.label}</a>
-                  </li>
-                );
-              })}
+            <h4 className="text-xs font-mono uppercase tracking-widest text-emerald-glow mb-3 sm:mb-4 font-semibold">
+              IEEE CS SYP
+            </h4>
+            <ul className="space-y-1.5 sm:space-y-2 text-xs text-slate-mist">
+              <li>
+                <a
+                  href="https://www.instagram.com/ieeecs_srmist/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block py-1 hover:text-[#E2B767] transition-colors"
+                >
+                  Instagram @ieeecs_srmist
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/company/ieee-computer-society-srmist"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block py-1 hover:text-[#E2B767] transition-colors"
+                >
+                  LinkedIn IEEE CS SRMIST
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:ieeecomputersocietysrmist@gmail.com"
+                  className="inline-block py-1 hover:text-[#E2B767] transition-colors break-all"
+                >
+                  ieeecomputersocietysrmist@gmail.com
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-5 text-xs text-ivory/60">
-          <p>© 2026 AICSSYC · IEEE Computer Society SYP</p>
-          <div className="flex flex-wrap gap-x-6 gap-y-3 items-center">
-            <Link to="/code-of-conduct" className="hover:text-ivory transition">Code of conduct</Link>
-            <Link to="/privacy" className="hover:text-ivory transition">Privacy</Link>
-
+        <div className="mt-10 sm:mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-mist text-center sm:text-left">
+          <p>© 2026 AICSSYC • IEEE Computer Society SYP • SRMIST Chennai</p>
+          <div className="flex items-center gap-6">
+            <Link to="/code-of-conduct" className="hover:text-ivory transition-colors py-1">
+              Code of Conduct
+            </Link>
+            <Link to="/privacy" className="hover:text-ivory transition-colors py-1">
+              Privacy Policy
+            </Link>
           </div>
         </div>
       </div>

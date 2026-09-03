@@ -7,24 +7,24 @@
     "email": "ug9320@srmist.edu.in"
   },
   {
-    "name": "Aayushman Kathayat",
-    "role": "Vice Chair",
-    "phone": "+91 94563 62388",
-    "phoneHref": "+919456362388",
-    "email": "ak1320@srmist.edu.in"
-  },
-  {
-    "name": "Krishna Aggarwal",
-    "role": "Secretary",
-    "phone": "+91 97182 12195",
-    "phoneHref": "+919718212195",
-    "email": "ka2937@srmist.edu.in"
-  },
-  {
     "name": "Atharv Dorle",
     "role": "Technical Head",
     "phone": "+91 83197 73605",
     "phoneHref": "+918319773605",
     "email": "ad3638@srmist.edu.in"
+  },
+  {
+    "name": "Vishesh Jhabak",
+    "role": "Core-Coordinator",
+    "phone": "+91 831 996 1671",
+    "phoneHref": "+918319961671",
+    "email": "vj8711@srmist.edu.in"
+  },
+  {
+    "name": "Sumant Dash",
+    "role": "Core-Coordinator",
+    "phone": "+91 733 115 5670",
+    "phoneHref": "+917331155670",
+    "email": "sd4797@srmist.edu.in"
   }
 ]

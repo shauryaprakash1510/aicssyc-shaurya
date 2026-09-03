@@ -1,113 +1,275 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Reveal } from "./Reveal";
-import { ScrollSection } from "./ScrollSection";
+import { useState, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Cpu, Bot, Sparkles, Brain, Network, Code, ArrowUpRight, Zap } from "lucide-react";
 
-import themesData from "@/data/themes.json";
+interface Track {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  topics: string[];
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  accentColor: string;
+}
 
-const themes = themesData;
+const tracksData: Track[] = [
+  {
+    id: "autonomous-agents",
+    title: "Autonomous Agents",
+    category: "Track 01",
+    description:
+      "Multi-agent orchestration, autonomous decision frameworks, goal decomposition, and recursive self-improvement architectures.",
+    topics: ["Agentic Workflows", "Swarm Intelligence", "Goal Decomposition", "Self-Improvement"],
+    icon: Bot,
+    accentColor: "from-amber-500/20 to-yellow-500/10",
+  },
+  {
+    id: "human-ai-collab",
+    title: "Human-AI Collaboration",
+    category: "Track 02",
+    description:
+      "Designing high-bandwidth interfaces, trusted cognitive loops, and shared human-machine autonomy.",
+    topics: [
+      "Intelligent Interfaces",
+      "Trust & Alignment",
+      "Human-in-the-Loop",
+      "Cognitive Augmentation",
+    ],
+    icon: Brain,
+    accentColor: "from-emerald-500/20 to-teal-500/10",
+  },
+  {
+    id: "next-gen-computing",
+    title: "Next-Gen Computing",
+    category: "Track 03",
+    description:
+      "Neuromorphic architectures, quantum computing primitives, low-latency edge AI, and next-gen silicon.",
+    topics: ["Quantum Primitives", "Edge AI Silicon", "Neuromorphic Chips", "Low-Latency Infra"],
+    icon: Cpu,
+    accentColor: "from-amber-500/20 to-emerald-500/10",
+  },
+  {
+    id: "cybernetics-security",
+    title: "Cybernetics & Security",
+    category: "Track 04",
+    description:
+      "Adversarial robustness, zero-trust agent authentication, autonomous cyber defense, and AI governance.",
+    topics: [
+      "Adversarial Robustness",
+      "Zero-Trust Agent Auth",
+      "Autonomous Cyber Defense",
+      "Ethics & Governance",
+    ],
+    icon: Network,
+    accentColor: "from-teal-500/20 to-emerald-500/10",
+  },
+  {
+    id: "ai-intelligent-systems",
+    title: "AI & Intelligent Systems",
+    category: "Track 05",
+    description:
+      "Frontier multimodal foundation models, computer vision, reinforcement learning, and large-scale model fine-tuning.",
+    topics: [
+      "Multimodal LLMs",
+      "Reinforcement Learning",
+      "Neural Architectures",
+      "Model Distillation",
+    ],
+    icon: Sparkles,
+    accentColor: "from-yellow-500/20 to-amber-500/10",
+  },
+  {
+    id: "research-academia",
+    title: "Research & Academia",
+    category: "Track 06",
+    description:
+      "Peer-reviewed paper presentations, student research showcases, interdisciplinary academic grants, and IEEE publications.",
+    topics: [
+      "Paper Presentations",
+      "Student Research Track",
+      "Academic Grants",
+      "IEEE Publications",
+    ],
+    icon: Code,
+    accentColor: "from-emerald-500/20 to-amber-500/10",
+  },
+];
 
-export function Themes() {
-  const [active, setActive] = useState(0);
+const renderTitle = (title: string) => {
+  if (title.includes(" & ")) {
+    const parts = title.split(" & ");
+    return (
+      <>
+        {parts[0]} <span className="text-[#E2B767]">&amp;</span> {parts[1]}
+      </>
+    );
+  }
+  return title;
+};
+
+function TrackCard3DTilt({ track }: { track: Track }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Motion values for 3D card tilt physics
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth spring response
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 25 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 25 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current || window.innerWidth < 768) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    x.set(0);
+    y.set(0);
+  };
+
+  const IconComponent = track.icon;
 
   return (
-    <ScrollSection id="themes" className="relative section-rhythm bg-transparent text-ivory grain overflow-hidden">
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-70"
-        style={{ background: "var(--gradient-atmosphere)" }}
-      />
-      {/* Background oversize type */}
-      <p
-        aria-hidden
-        className="pointer-events-none absolute -top-6 left-0 right-0 text-center display-mega text-ivory/[0.04] select-none whitespace-nowrap"
+    <div style={{ perspective: 1000 }} className="h-full">
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        }}
+        className="relative h-full min-h-0 sm:min-h-[440px] lg:min-h-[460px] glass-card glass-card-hover rounded-3xl p-5 sm:p-7 md:p-8 flex flex-col justify-between cursor-pointer border border-white/10 group overflow-hidden"
       >
-        PROGRAMME
-      </p>
+        {/* Ambient Gradient Glow */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${track.accentColor} opacity-35 group-hover:opacity-75 transition-opacity duration-500 pointer-events-none`}
+        />
 
-      <div className="container-editorial relative">
-        <Reveal direction="up" distance={32} className="max-w-3xl">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-gold">Programme · Six tracks</p>
-          <h2 className="mt-6 font-display text-[clamp(2rem,4.5vw,4rem)] leading-[1.02] tracking-tight text-balance">
-            One coherent argument
-            <span className="editorial-italic text-gold"> about what to build,</span>
-            <br />
-            told across six tracks.
-          </h2>
-        </Reveal>
+        {/* Top Section */}
+        <div style={{ transform: "translateZ(20px)" }} className="relative z-10">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <span className="text-[11px] sm:text-xs font-mono tracking-widest text-[#E2B767] uppercase font-semibold">
+              {track.category}
+            </span>
+            <div className="p-2.5 sm:p-3 rounded-2xl glass-pill border border-white/10 text-[#E2B767] group-hover:scale-110 group-hover:text-[#F3D38C] transition-transform duration-300">
+              <IconComponent size={20} className="sm:w-[22px] sm:h-[22px]" />
+            </div>
+          </div>
 
-        <div className="mt-20 grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-20">
-          {/* Editorial list */}
-          <ol className="hairline-top">
-            {themes.map((t, i) => {
-              const isActive = active === i;
-              return (
-                <li key={t.title} className="border-b border-white/8">
-                  <button
-                    type="button"
-                    onMouseEnter={() => setActive(i)}
-                    onFocus={() => setActive(i)}
-                    onClick={() => setActive(i)}
-                    aria-expanded={isActive}
-                    className="group w-full flex items-baseline gap-6 py-6 md:py-7 text-left transition-colors"
-                  >
-                    <span
-                      className={`font-mono text-xs tracking-widest w-8 transition-colors ${
-                        isActive ? "text-gold" : "text-ivory/40"
-                      }`}
-                    >
-                      0{i + 1}
-                    </span>
-                    <span
-                      className={`flex-1 font-display text-2xl md:text-[1.9rem] leading-tight tracking-tight transition-all ${
-                        isActive ? "text-ivory translate-x-1" : "text-ivory/55 group-hover:text-ivory/85"
-                      }`}
-                    >
-                      {t.title}
-                    </span>
-                    <span
-                      aria-hidden
-                      className={`hidden md:inline-block h-px transition-all duration-500 ${
-                        isActive ? "w-12 bg-gold" : "w-4 bg-ivory/20"
-                      }`}
-                    />
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
+          <h3 className="text-xl sm:text-2xl font-serif font-normal text-white group-hover:text-[#E2B767] transition-colors leading-snug">
+            {renderTitle(track.title)}
+          </h3>
 
-          {/* Detail panel — no extra border, breathes */}
-          <div className="relative lg:pt-2">
-            <AnimatePresence mode="wait">
-              <motion.article
-                key={active}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-white/70 leading-relaxed font-sans line-clamp-3 sm:line-clamp-3">
+            {track.description}
+          </p>
+        </div>
+
+        {/* Bottom Section (Topics & Action link) */}
+        <div style={{ transform: "translateZ(30px)" }} className="relative z-10 mt-5 sm:mt-6">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
+            {track.topics.map((topic) => (
+              <span
+                key={topic}
+                className="text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-white/70 transition-all duration-300 group-hover:border-[#E2B767]/30"
               >
-                <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Track 0{active + 1}</p>
-                <h3 className="mt-4 font-display text-3xl md:text-4xl text-ivory leading-tight text-balance">
-                  {themes[active].title}
-                </h3>
-                <p className="mt-6 font-editorial italic text-xl text-ivory/85 leading-snug prose-narrow">
-                  {themes[active].blurb}
-                </p>
+                {topic}
+              </span>
+            ))}
+          </div>
 
-                <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 prose-measure">
-                  {themes[active].topics.map((tp) => (
-                    <li key={tp} className="flex items-start gap-3 text-ivory/85 text-sm leading-relaxed">
-                      <span className="mt-2 h-1 w-1 rounded-full bg-gold flex-shrink-0" />
-                      {tp}
-                    </li>
-                  ))}
-                </ul>
-              </motion.article>
-            </AnimatePresence>
+          <div className="mt-5 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-[#E2B767] group-hover:text-[#F3D38C] transition-all duration-300 min-h-[36px]">
+            <span className="relative overflow-hidden group-hover:underline decoration-[#E2B767] underline-offset-4">
+              Explore Track Papers
+            </span>
+            <ArrowUpRight
+              size={16}
+              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+            />
           </div>
         </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export function Themes() {
+  return (
+    <section
+      id="themes"
+      className="relative scroll-mt-24 sm:scroll-mt-32 section-rhythm overflow-hidden text-ivory"
+    >
+      {/* Background Ambient Glows (Constrained for mobile) */}
+      <div className="absolute top-1/2 left-0 w-72 sm:w-96 h-72 sm:h-96 bg-emerald-500/10 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-amber-500/10 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none" />
+
+      <div className="container-editorial relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 lg:mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full glass-pill border border-[#E2B767]/30 text-[11px] sm:text-xs font-mono text-[#E2B767] uppercase tracking-widest mb-3 sm:mb-4"
+          >
+            <Zap size={13} />
+            <span>
+              CONGRESS TRACKS <span className="text-[#E2B767]">&amp;</span> THEMES
+            </span>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight text-balance"
+          >
+            6 Core Tracks{" "}
+            <span className="font-editorial italic font-normal text-[#E2B767]">
+              Defying Frontiers
+            </span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-sm sm:text-base md:text-lg text-white/60 max-w-2xl mx-auto text-center mt-2.5 sm:mt-3 font-sans"
+          >
+            Six dedicated focus areas exploring the frontier of agent architectures, intelligent
+            infrastructure, and human-machine interaction.
+          </motion.p>
+        </div>
+
+        {/* Tracks Grid (1-Column Stack on Mobile -> 2-col on Tablet -> 3-col on Desktop) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+          {tracksData.map((track) => (
+            <TrackCard3DTilt key={track.id} track={track} />
+          ))}
+        </div>
       </div>
-    </ScrollSection>
+    </section>
   );
 }

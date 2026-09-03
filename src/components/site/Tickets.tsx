@@ -1,15 +1,6 @@
 import { useState } from "react";
-import { Check, X } from "lucide-react";
+import { Check, Sparkles, ArrowRight, Hotel } from "lucide-react";
 import { motion } from "framer-motion";
-import { RevealGroup, Heading, Body } from "./Reveal";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-} from "@/components/ui/dialog";
 
 type Tier = {
   id: string;
@@ -18,12 +9,6 @@ type Tier = {
   basePrice: number;
   requirement?: string;
   popular?: boolean;
-  /** Konfhub ticket id; when omitted, the widget opens on the full ticket list. */
-  ticketId?: string;
-  /** External register URL; when set, the Register button links out instead of opening the widget dialog. */
-  registerUrl?: string;
-  /** External register URL used when the accommodation add-on is toggled on. */
-  registerUrlWithAccommodation?: string;
 };
 
 import ticketsData from "@/data/tickets.json";
@@ -32,268 +17,165 @@ const tiers: Tier[] = ticketsData.tiers as Tier[];
 const baseFeatures = ticketsData.baseFeatures;
 const ACCOMMODATION_FEE = ticketsData.accommodationFee;
 
-// Konfhub widget palette tuned to the dark midnight + gold theme.
-// Konfhub widget palette. The widget itself is cross-origin so we can only
-// tune what its query params expose. We use a light ivory "form card" inside
-// the dark modal — it reads as a single brand object and all KonfHub-controlled
-// chrome (inputs, timer bar, checkout strip) stays on a consistent surface.
-// Text colors are tuned for WCAG AA on the chosen backgrounds.
-const WIDGET_PARAMS =
-  "desc=false" +
-  "&bg=FBF7EC" + // ivory page
-  "&secondaryBg=F3ECD7" + // sand panels
-  "&ticketBg=FFFFFF" + // white ticket cards
-  "&borderCl=E2D6B0" + // warm gold-tinted border
-  "&fontColor=1A1F2C" + // near-black body text (15.6:1 on ivory)
-  "&ticketCl=1A1F2C" + // ticket text
-  "&btnColor=8A6A1F" + // deep gold for AA on white button text (5.4:1)
-  "&fontFamily=Hind" +
-  "&borderRadius=10" +
-  "&widget_type=quick";
-
-
-function buildWidgetUrl(ticketId?: string) {
-  if (ticketId) {
-    return `https://konfhub.com/widget/aicssyc-2026?${WIDGET_PARAMS}&screen=2&tickets=${ticketId}&ticketId=${ticketId}%7C1`;
-  }
-  return `https://konfhub.com/widget/aicssyc-2026?${WIDGET_PARAMS}&screen=1`;
-}
-
 export function Tickets() {
   const [accommodation, setAccommodation] = useState(false);
-  const [activeTier, setActiveTier] = useState<Tier | null>(null);
 
   return (
     <section
       id="tickets"
-      className="relative section-rhythm bg-transparent text-ivory grain overflow-hidden"
+      className="relative scroll-mt-24 sm:scroll-mt-32 section-rhythm overflow-hidden text-ivory"
     >
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-60"
-        style={{ background: "var(--gradient-atmosphere)" }}
-      />
-      <div className="container-editorial relative">
-        <RevealGroup className="grid lg:grid-cols-[1.3fr_1fr] items-end gap-10 mb-14">
-          <div className="max-w-2xl">
-            <Heading className="font-display text-[clamp(2rem,4.5vw,4rem)] leading-[1.02] tracking-tight text-balance">
-              Three passes.
-              <span className="editorial-italic text-gold"> One congress.</span>
-            </Heading>
-          </div>
-          <Body className="text-ivory/65 max-w-sm md:justify-self-end text-[15px] leading-[1.7]">
-            <p>
-              Every pass includes full event access, technical tracks, keynotes,
-              Innovation Expo, delegate kit, meals, networking events and a
-              participation certificate.
-            </p>
-          </Body>
-        </RevealGroup>
+      {/* Background glow (Constrained) */}
+      <div className="absolute top-1/2 right-10 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-amber-500/10 rounded-full blur-[100px] sm:blur-[160px] pointer-events-none" />
 
+      <div className="container-editorial relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 lg:mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full glass-pill border border-[#E2B767]/30 text-[11px] sm:text-xs font-mono text-[#E2B767] uppercase tracking-widest mb-3 sm:mb-4"
+          >
+            <Sparkles size={13} />
+            <span>CONGRESS DELEGATE PASSES</span>
+          </motion.div>
 
-        {/* Accommodation toggle */}
-        <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/10 bg-midnight-deep/55 p-5 md:p-6">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-gold">Optional add-on</p>
-            <p className="mt-2 font-display text-xl text-ivory">
-              Accommodation
-              <span className="text-ivory/75 text-base ml-2">+ ₹2,000</span>
-            </p>
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-serif text-white tracking-tight text-balance"
+          >
+            Choose Your{" "}
+            <span className="font-editorial italic font-normal text-[#E2B767]">Pass</span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-sm sm:text-base md:text-lg text-white/60 max-w-2xl mx-auto text-center mt-2.5 sm:mt-3 font-sans"
+          >
+            Full access to 4 days of keynotes, 6 technical tracks, delegate kit, meals,{" "}
+            <span className="text-[#E2B767]">&amp;</span> IEEE certificates.
+          </motion.p>
+        </div>
+
+        {/* Accommodation Toggle Bar */}
+        <div className="mb-8 sm:mb-12 max-w-2xl mx-auto glass-card rounded-2xl p-4 sm:p-5 border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl glass-pill text-emerald-glow border border-white/10 shrink-0">
+              <Hotel size={20} />
+            </div>
+            <div>
+              <div className="text-xs sm:text-sm font-semibold text-ivory">
+                Hostel Accommodation Add-On
+              </div>
+              <div className="text-[11px] sm:text-xs text-slate-mist">
+                Include 4-night stay on SRMIST Campus (+ ₹2,000)
+              </div>
+            </div>
           </div>
+
           <button
             type="button"
-            role="switch"
-            aria-checked={accommodation}
-            aria-label="Toggle Accommodation add-on"
-            onClick={() => setAccommodation((v) => !v)}
-            className={`relative inline-flex h-9 w-[180px] items-center rounded-sm border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-midnight-deep ${
+            onClick={() => setAccommodation(!accommodation)}
+            className={`min-h-[44px] px-5 py-2.5 rounded-full text-xs font-semibold transition-all duration-300 border flex items-center justify-center ${
               accommodation
-                ? "bg-gold border-gold text-midnight-deep"
-                : "bg-transparent border-white/20 text-ivory"
+                ? "bg-emerald-500/20 text-emerald-glow border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                : "glass-pill text-ivory/80 border-white/10 hover:text-ivory active:bg-white/10"
             }`}
           >
-            <span
-              className={`absolute top-1 bottom-1 w-[86px] rounded-sm transition-all ${
-                accommodation ? "left-[90px] bg-midnight/60" : "left-1 bg-white/15"
-              }`}
-            />
-            <span className="relative z-10 flex-1 text-center text-xs font-medium uppercase tracking-[0.16em] text-ivory">
-              No stay
-            </span>
-            <span
-              className={`relative z-10 flex-1 text-center text-xs font-medium uppercase tracking-[0.16em] ${
-                accommodation ? "text-gold" : "text-ivory/75"
-              }`}
-            >
-              Add stay
-            </span>
+            {accommodation ? "✓ Stay Included (+₹2,000)" : "+ Add Stay (+₹2,000)"}
           </button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {tiers.map((t) => {
+        {/* Passes Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {tiers.map((t, i) => {
             const price = t.basePrice + (accommodation ? ACCOMMODATION_FEE : 0);
-            const features = accommodation
-              ? [...baseFeatures, "Accommodation included"]
-              : baseFeatures;
+            const isPopular = t.popular;
+
             return (
-              <motion.article
+              <motion.div
                 key={t.id}
-                initial={{ opacity: 0, y: 50, scale: 0.92 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{
-                  duration: 0.8,
-                  delay: tiers.indexOf(t) * 0.15,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                aria-labelledby={`tier-${t.id}-title`}
-                className={`relative p-8 md:p-10 border flex flex-col ${
-                  t.popular
-                    ? "bg-transparent text-ivory border-gold shadow-[var(--shadow-gold)]"
-                    : "bg-midnight-deep/55 border-white/10 text-ivory"
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className={`relative glass-card rounded-3xl p-6 sm:p-8 border flex flex-col justify-between ${
+                  isPopular
+                    ? "border-gold-glow/50 shadow-[0_0_40px_rgba(234,179,8,0.2)] bg-gradient-to-b from-[#101613] to-[#0b100d]"
+                    : "border-white/10"
                 }`}
               >
-                {t.popular && (
-                  <span className="absolute -top-3 left-8 bg-gold text-midnight-deep text-[10px] uppercase tracking-[0.22em] px-3 py-1">
-                    Most subsidised
-                  </span>
-                )}
-                <h3
-                  id={`tier-${t.id}-title`}
-                  className="font-display text-2xl md:text-[1.7rem] leading-tight text-ivory"
-                >
-                  {t.name}
-                </h3>
-                <p className="mt-2 text-sm text-ivory/80">{t.tagline}</p>
-
-                <div className="mt-8 flex items-baseline gap-2">
-                  <span className="font-display text-5xl">
-                    <span className="sr-only">Price: </span>₹{price.toLocaleString("en-IN")}
-                  </span>
-                  <span className="text-sm text-ivory/75">/ person</span>
-                </div>
-                {accommodation && (
-                  <p className="mt-1 text-xs text-ivory/75">
-                    Includes ₹2,000 accommodation
-                  </p>
+                {isPopular && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#E2B767] text-[#070a08] text-[10px] uppercase font-bold tracking-widest shadow-md">
+                    Most Popular Pass
+                  </div>
                 )}
 
-                <ul className="mt-8 space-y-3 flex-1">
-                  {features.map((f) => (
-                    <li
-                      key={f}
-                      className="flex items-start gap-3 text-sm leading-relaxed"
-                    >
-                      <Check
-                        size={16}
-                        aria-hidden
-                        className={`mt-0.5 flex-shrink-0 ${
-                          t.popular ? "text-emerald" : "text-gold"
-                        }`}
-                      />
-                      <span className="text-ivory/85">{f}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {t.requirement && (
-                  <p
-                    className={`mt-6 text-xs leading-relaxed border-l-2 pl-3 ${
-                      t.popular ? "border-emerald text-ivory/80" : "border-gold text-ivory/80"
-                    }`}
-                  >
-                    <span className="uppercase tracking-[0.16em] block mb-1">
-                      Requirement
+                <div>
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <span className="text-xs font-mono tracking-widest text-emerald-glow uppercase font-semibold">
+                      {t.name}
                     </span>
-                    {t.requirement}
-                  </p>
-                )}
+                  </div>
 
-                <div className="mt-8">
+                  <p className="text-xs sm:text-sm text-slate-mist mb-4 sm:mb-6 leading-relaxed">
+                    {t.tagline}
+                  </p>
+
+                  <div className="flex items-baseline gap-1 my-4 sm:my-6">
+                    <span className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-gradient-gold">
+                      ₹{price.toLocaleString("en-IN")}
+                    </span>
+                    <span className="text-xs text-slate-mist">/ delegate</span>
+                  </div>
+
+                  <ul className="space-y-2.5 sm:space-y-3 pt-5 sm:pt-6 border-t border-white/10">
+                    {baseFeatures.map((feat) => (
+                      <li
+                        key={feat}
+                        className="flex items-start gap-2.5 text-xs text-ivory/90 leading-relaxed"
+                      >
+                        <Check size={14} className="text-emerald-glow mt-0.5 shrink-0" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                    {accommodation && (
+                      <li className="flex items-start gap-2.5 text-xs text-emerald-glow leading-relaxed font-medium">
+                        <Check size={14} className="text-emerald-glow mt-0.5 shrink-0" />
+                        <span>4-Night SRMIST Hostel Accommodation</span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+
+                <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/10">
                   <a
                     href="https://dashboard.eqvento.in/register/aicssyc26-lM0m3B"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-midnight-deep ${
-                      t.popular
-                        ? "bg-midnight/60 text-ivory hover:bg-midnight-deep/70"
-                        : "bg-gold text-midnight-deep hover:bg-gold-soft"
+                    className={`w-full min-h-[44px] py-3.5 px-4 rounded-full text-center text-xs font-semibold flex items-center justify-center gap-2 group transition-all duration-300 ${
+                      isPopular ? "btn-primary-gold" : "btn-secondary-glass"
                     }`}
                   >
-                    Register now
-                    <span aria-hidden>→</span>
+                    <span>Get Pass Now</span>
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
                   </a>
                 </div>
-              </motion.article>
+              </motion.div>
             );
           })}
         </div>
       </div>
-
-      <Dialog
-        open={activeTier !== null}
-        onOpenChange={(open) => !open && setActiveTier(null)}
-      >
-        <DialogContent
-          className="max-w-2xl p-0 gap-0 overflow-hidden border-gold/30 bg-midnight-deep text-ivory shadow-[var(--shadow-gold)] [&>button]:hidden"
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-50"
-            style={{ background: "var(--gradient-atmosphere)" }}
-          />
-          <DialogHeader className="relative px-6 pt-6 pb-4 border-b border-white/10">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-gold">
-                  Secure registration
-                </p>
-                <DialogTitle className="mt-2 font-display text-xl md:text-2xl text-ivory leading-tight">
-                  {activeTier?.name ?? "Register"}
-                </DialogTitle>
-                <DialogDescription className="mt-1 text-sm text-ivory/75">
-                  {activeTier?.tagline ?? "Complete your registration via KonfHub."}
-                </DialogDescription>
-              </div>
-              <DialogClose
-                aria-label="Close registration dialog"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-white/15 text-ivory/80 hover:bg-white/5 hover:text-ivory transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              >
-                <X size={18} aria-hidden />
-              </DialogClose>
-            </div>
-          </DialogHeader>
-          <div className="relative p-4 md:p-5">
-            <div className="rounded-[12px] overflow-hidden bg-[#FBF7EC] ring-1 ring-gold/40 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)]">
-              {activeTier && (
-                <iframe
-                  key={activeTier.id}
-                  src={buildWidgetUrl(activeTier.ticketId)}
-                  title={`Register for ${activeTier.name} — AICSSYC 2026`}
-                  width="100%"
-                  height="560"
-                  allow="payment"
-                  className="block w-full border-0 bg-[#FBF7EC]"
-                />
-              )}
-            </div>
-          </div>
-
-          <div className="relative px-6 py-3 border-t border-white/10 text-[11px] text-ivory/60 flex items-center justify-between gap-3">
-            <span>Powered by KonfHub · Secure checkout</span>
-            <a
-              href="https://konfhub.com/aicssyc-2026"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold hover:text-gold-soft underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-sm"
-            >
-              Open full page ↗
-            </a>
-          </div>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }

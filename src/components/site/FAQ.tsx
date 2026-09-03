@@ -44,7 +44,9 @@ export function FAQ() {
                   </span>
                   <span
                     className={`flex-shrink-0 h-9 w-9 inline-flex items-center justify-center border border-ivory/20 transition-all ${
-                      isOpen ? "bg-gold text-midnight border-gold rotate-45" : "text-ivory group-hover:border-gold/60"
+                      isOpen
+                        ? "bg-gold text-midnight border-gold rotate-45"
+                        : "text-ivory group-hover:border-gold/60"
                     }`}
                   >
                     <Plus size={16} />

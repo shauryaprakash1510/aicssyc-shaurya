@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link } from "@tanstack/react-router";
 import partnersData from "@/data/partners.json";
 import { Reveal, RevealGroup } from "./Reveal";
 
@@ -39,27 +39,39 @@ export function Sponsors() {
                 <div className="h-full flex flex-col items-center justify-center p-8 md:p-10 rounded-2xl bg-[#1c1c1c]/80 backdrop-blur-md border border-ivory/10 hover:border-gold/30 hover:bg-[#262626] transition-all duration-300 group">
                   <div className="h-20 md:h-24 flex items-center justify-center mb-6 w-full relative">
                     {p.logo ? (
-                      <img 
-                        src={p.logo} 
-                        alt={p.name} 
-                        className="max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-500" 
+                      <img
+                        src={p.logo}
+                        alt={p.name}
+                        className="max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
                       <span className="font-display text-4xl text-ivory/40">{p.name[0]}</span>
                     )}
                   </div>
-                  <h3 className="font-display text-xl md:text-2xl text-ivory font-bold mb-2 text-center">{p.name}</h3>
+                  <h3 className="font-display text-xl md:text-2xl text-ivory font-bold mb-2 text-center">
+                    {p.name}
+                  </h3>
                   {p.description && (
-                    <p className="text-sm text-ivory/60 text-center leading-relaxed max-w-xs">{p.description}</p>
+                    <p className="text-sm text-ivory/60 text-center leading-relaxed max-w-xs">
+                      {p.description}
+                    </p>
                   )}
                   {!p.description && p.tier && (
-                    <p className="text-sm text-gold/80 text-center tracking-wider uppercase mt-1">{p.tier}</p>
+                    <p className="text-sm text-gold/80 text-center tracking-wider uppercase mt-1">
+                      {p.tier}
+                    </p>
                   )}
                 </div>
               );
 
               return p.url ? (
-                <a key={`${p.name}-${idx}`} href={p.url} target="_blank" rel="noopener noreferrer" className="block h-full outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-2xl">
+                <a
+                  key={`${p.name}-${idx}`}
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block h-full outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-2xl"
+                >
                   {cardContent}
                 </a>
               ) : (
@@ -72,8 +84,8 @@ export function Sponsors() {
         ) : (
           <div className="mt-16 grid md:grid-cols-[1fr_auto] items-end gap-10 hairline-top pt-12">
             <p className="font-editorial italic text-2xl md:text-3xl text-ivory/85 leading-snug prose-measure">
-              Founding partners, principal sponsors and programme partners for the
-              2026 edition will be unveiled in the coming weeks.
+              Founding partners, principal sponsors and programme partners for the 2026 edition will
+              be unveiled in the coming weeks.
             </p>
             <Link
               to="/sponsor"

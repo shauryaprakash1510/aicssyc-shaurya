@@ -26,7 +26,10 @@ export const Route = createFileRoute("/")({
     meta: [
       { title },
       { name: "description", content: description },
-      { property: "og:title", content: "All India Computer Society Student & Young Professional Congress 2026" },
+      {
+        property: "og:title",
+        content: "All India Computer Society Student & Young Professional Congress 2026",
+      },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://aicssyc.ieeecssrm.in/" },
@@ -36,7 +39,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://aicssyc.ieeecssrm.in/" },
-      { rel: "alternate", href: "https://aicssyc.in/" }
+      { rel: "alternate", href: "https://aicssyc.in/" },
     ],
     scripts: [
       {
@@ -87,10 +90,10 @@ function Index() {
   }, []);
 
   return (
-    <div className="text-ivory min-h-screen">
+    <div className="text-ivory min-h-screen overflow-x-hidden w-full relative">
       <SiteNav />
 
-      <main>
+      <main className="overflow-x-hidden w-full">
         <Hero />
         <About />
         <Themes />

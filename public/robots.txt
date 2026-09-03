@@ -27,4 +27,4 @@ Allow: /
 User-agent: Omgili
 Allow: /
 
-Sitemap: https://aicssyc.vercel.app/sitemap.xml
+Sitemap: https://aicssyc.ieeecssrm.in/sitemap.xml

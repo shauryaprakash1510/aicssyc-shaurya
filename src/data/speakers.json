@@ -10,6 +10,14 @@
   },
   "speakers": [
     {
+      "name": "Biswarup Ray",
+      "org": "Chair SYP IEEE CS",
+      "focus": "Lead AI Engineer Bayer",
+      "initials": "BR",
+      "photo": "biswarup",
+      "linkedin": "https://www.linkedin.com/in/biswarup-ray-915726173/"
+    },
+    {
       "name": "Utkarsh Siddharth",
       "org": "Co-Founder & CTO",
       "focus": "Equartis Technologies",
@@ -40,14 +48,6 @@
       "initials": "NJ",
       "photo": "nikky",
       "linkedin": "https://www.linkedin.com/in/nikkykumarjha/"
-    },
-    {
-      "name": "Kapil Pant",
-      "org": "Global Head - Data & AI Tech",
-      "focus": "ZS Associates",
-      "initials": "KP",
-      "photo": "kapil",
-      "linkedin": "https://www.linkedin.com/in/kapilpant/"
     },
     {
       "name": "Sarun Natarajan",

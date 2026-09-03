@@ -1,323 +1,260 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronRight } from "lucide-react";
-import siteConfig from "@/data/site-config.json";
+import { Menu, X, Sparkles, ArrowRight } from "lucide-react";
 
-const links = siteConfig.navigation;
-
-// Extract hash IDs for active section tracking
-const sectionIds = links
-  .filter((l) => l.href.startsWith("#"))
-  .map((l) => l.href.slice(1));
+const navItems = [
+  { href: "#about", label: "About" },
+  { href: "#themes", label: "Tracks" },
+  { href: "#speakers", label: "Speakers" },
+  { href: "#agenda", label: "Schedule" },
+  { href: "#tickets", label: "Passes" },
+  { href: "#location", label: "Venue" },
+  { href: "#contact", label: "Contact" },
+];
 
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("");
+  const [activeSection, setActiveSection] = useState("");
 
-  // Scroll listener for header appearance
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Intersection Observer for active section highlighting
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    const sectionMap = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.25 },
+    );
 
-    const update = () => {
-      let best = "";
-      let bestRatio = -1;
-      sectionMap.forEach((ratio, id) => {
-        if (ratio > bestRatio) {
-          bestRatio = ratio;
-          best = id;
-        }
-      });
-      setActiveSection(best);
-    };
-
-    sectionIds.forEach((id) => {
+    navItems.forEach((item) => {
+      const id = item.href.replace("#", "");
       const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          sectionMap.set(id, entry.intersectionRatio);
-          update();
-        },
-        { threshold: [0, 0.1, 0.25, 0.5], rootMargin: "-15% 0px -15% 0px" }
-      );
-      obs.observe(el);
-      observers.push(obs);
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
   }, []);
 
-  // Close drawer on resize to desktop
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth >= 1024) setOpen(false);
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  // Lock body scroll when drawer is open
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
   const closeMenu = useCallback(() => setOpen(false), []);
 
-  const NavLink = ({
-    href,
-    label,
-    mobile = false,
-    onClick,
-  }: {
-    href: string;
-    label: string;
-    mobile?: boolean;
-    onClick?: () => void;
-  }) => {
-    const isHash = href.startsWith("#");
-    const id = isHash ? href.slice(1) : "";
-    const isActive = id && activeSection === id;
-
-    const className = mobile
-      ? `flex items-center justify-between w-full px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 group ${
-          isActive
-            ? "bg-gold/15 text-gold border border-gold/25"
-            : "text-ivory/80 hover:text-ivory hover:bg-white/5 border border-transparent"
-        }`
-      : `relative text-[0.8rem] font-medium tracking-wide transition-colors duration-200 py-1 whitespace-nowrap ${
-          isActive ? "text-gold" : "text-ivory/70 hover:text-ivory"
-        }`;
-
-    const content = mobile ? (
-      <>
-        <span>{label}</span>
-        <ChevronRight
-          size={14}
-          className={`transition-transform duration-200 ${isActive ? "text-gold translate-x-0.5" : "text-ivory/30 group-hover:translate-x-0.5"}`}
-        />
-      </>
-    ) : (
-      <>
-        {label}
-        <span
-          className={`absolute -bottom-1 left-0 h-px transition-all duration-300 bg-gold ${
-            isActive ? "w-full" : "w-0 group-hover:w-full"
-          }`}
-        />
-      </>
-    );
-
-    if (isHash) {
-      return (
-        <Link
-          to="/"
-          hash={id}
-          className={`${className} group`}
-          onClick={onClick}
-        >
-          {content}
-        </Link>
-      );
-    }
-
-    return (
-      <a href={href} className={`${className} group`} onClick={onClick}>
-        {content}
-      </a>
-    );
-  };
-
   return (
     <>
-      <motion.header
-        initial={{ y: -24, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-[color:var(--midnight-deep)]/92 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="container-editorial flex items-center justify-between h-14 md:h-16">
-          {/* ── Brand logos ── */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            <Link to="/" aria-label="AICSSYC 2026 — Home" className="flex items-center shrink-0">
+      <header className="fixed top-3 sm:top-4 inset-x-0 z-50 px-3 sm:px-6 md:px-8 max-w-6xl mx-auto pointer-events-none">
+        <motion.div
+          initial={{ y: -40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="pointer-events-auto flex items-center justify-between px-3.5 sm:px-6 md:px-7 py-2.5 sm:py-3 rounded-full backdrop-blur-xl bg-[#060D0A]/90 border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.7)] transition-all duration-300"
+        >
+          {/* Dual Institutional Lockup (Top-Left) */}
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group py-1">
               <img
                 src="/logo.png"
                 alt="AICSSYC 2026"
-                className="h-7 sm:h-8 md:h-9 w-auto object-contain"
+                className="h-7 sm:h-8 md:h-10 w-auto object-contain transition-transform group-hover:scale-105"
               />
-            </Link>
-            <div className="h-5 w-px bg-white/20 shrink-0" />
-            <a
-              href="https://www.srmist.edu.in/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center shrink-0"
-            >
+              <div className="h-5 sm:h-6 md:h-7 w-px bg-white/20" />
               <img
                 src="/srm.png"
                 alt="SRM IST"
-                className="h-5 sm:h-6 md:h-7 w-auto object-contain"
+                className="h-6 sm:h-7 md:h-9 w-auto object-contain transition-transform group-hover:scale-105"
               />
+            </Link>
+          </div>
+
+          {/* Centered Minimalist Navigation (Desktop) */}
+          <nav className="hidden lg:flex items-center gap-1 bg-white/[0.03] border border-white/10 rounded-full px-3 py-1.5">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.href.replace("#", "");
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`relative px-3.5 py-1.5 text-xs font-medium tracking-wide rounded-full transition-all duration-300 ${
+                    isActive
+                      ? "text-[#E2B767] font-semibold"
+                      : "text-white/80 hover:text-white hover:bg-white/[0.06]"
+                  }`}
+                >
+                  {item.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeGlowCapsule"
+                      className="absolute inset-0 rounded-full border border-[#E2B767]/40 bg-[#E2B767]/15 shadow-[0_0_15px_rgba(226,183,103,0.25)] -z-10"
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    />
+                  )}
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Desktop Right CTA */}
+          <div className="hidden lg:flex items-center gap-2.5">
+            <a
+              href="https://aicssyc.ieeecssrm.in/ambassador"
+              className="px-4 py-2 text-xs font-medium text-white/90 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] border border-white/15 hover:border-[#E2B767]/50 rounded-full transition-all flex items-center gap-1.5 min-h-[40px]"
+            >
+              <span>Ambassador</span>
+            </a>
+
+            <a
+              href="#tickets"
+              className="bg-[#E2B767] hover:bg-[#d6aa5a] text-[#060D0A] font-semibold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 transition-all shadow-[0_0_20px_rgba(226,183,103,0.3)] hover:shadow-[0_0_28px_rgba(226,183,103,0.5)] min-h-[40px] group"
+            >
+              <span>Get Passes</span>
+              <span className="transition-transform group-hover:translate-x-1 font-bold">→</span>
             </a>
           </div>
 
-          {/* ── Desktop nav ── */}
-          <nav
-            className="hidden lg:flex items-center gap-0.5 xl:gap-1 overflow-x-auto no-scrollbar"
-            aria-label="Main navigation"
-          >
-            {links.map((l) => (
-              <div key={l.href} className="px-2.5 xl:px-3">
-                <NavLink href={l.href} label={l.label} />
-              </div>
-            ))}
-          </nav>
-
-          {/* ── Desktop CTAs ── */}
-          <div className="hidden lg:flex items-center gap-2 shrink-0 ml-2">
-            <Link
-              to="/ambassador"
-              className="inline-flex items-center gap-1.5 rounded-full border border-ivory/20 bg-ivory/5 px-3.5 xl:px-4 py-1.5 text-[0.75rem] xl:text-xs font-medium text-ivory hover:bg-ivory/10 hover:border-ivory/35 transition-all duration-200 whitespace-nowrap"
+          {/* Mobile Right Controls: Compact Pill + Hamburger Toggle */}
+          <div className="flex lg:hidden items-center gap-2">
+            <a
+              href="https://aicssyc.ieeecssrm.in/ambassador"
+              className="text-[11px] sm:text-xs text-white/90 bg-white/[0.06] border border-white/15 px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-white/10 transition-colors"
             >
               Ambassador
-            </Link>
-            <Link
-              to="/"
-              hash="tickets"
-              className="group inline-flex items-center gap-1.5 rounded-full bg-gold px-3.5 xl:px-5 py-1.5 text-[0.75rem] xl:text-xs font-semibold text-midnight-deep shadow-[0_0_18px_rgba(212,166,60,0.3)] hover:shadow-[0_0_28px_rgba(212,166,60,0.5)] hover:bg-gold-soft transition-all duration-300 whitespace-nowrap"
+            </a>
+
+            <a
+              href="#tickets"
+              className="bg-[#E2B767] hover:bg-[#d6aa5a] text-[#060D0A] font-semibold text-[11px] sm:text-xs px-3 sm:px-3.5 py-1.5 rounded-full flex items-center gap-1 shadow-[0_0_12px_rgba(226,183,103,0.3)] min-h-[36px]"
             >
-              Get Tickets
-              <span className="transition-transform group-hover:translate-x-0.5" aria-hidden>→</span>
-            </Link>
+              <span>Passes</span>
+              <span className="font-bold text-xs">→</span>
+            </a>
+
+            <button
+              onClick={() => setOpen(!open)}
+              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full text-white hover:bg-white/10 active:bg-white/20 transition-colors"
+              aria-label={open ? "Close Navigation Menu" : "Open Navigation Menu"}
+              aria-expanded={open}
+            >
+              {open ? <X size={22} className="text-[#E2B767]" /> : <Menu size={22} />}
+            </button>
           </div>
+        </motion.div>
+      </header>
 
-          {/* ── Mobile menu toggle ── */}
-          <button
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg text-ivory hover:bg-white/10 transition-colors"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {open ? (
-                <motion.span
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <X size={20} />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="open"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <Menu size={20} />
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
-        </div>
-      </motion.header>
-
-      {/* ── Mobile drawer overlay ── */}
+      {/* Mobile Slide-Over Sheet / Full Backdrop Drawer */}
       <AnimatePresence>
         {open && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop overlay */}
             <motion.div
-              key="backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.22 }}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+              transition={{ duration: 0.25 }}
               onClick={closeMenu}
+              className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm lg:hidden"
             />
 
-            {/* Drawer panel */}
+            {/* Slide-Down / Slide-Over Sheet */}
             <motion.div
-              key="drawer"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 260 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-[min(85vw,340px)] lg:hidden flex flex-col bg-[color:var(--midnight-deep)] border-l border-white/[0.07] shadow-2xl overflow-y-auto"
+              initial={{ opacity: 0, y: -16, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -16, scale: 0.98 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-x-3 top-16 sm:top-20 z-50 lg:hidden rounded-3xl p-5 sm:p-6 bg-[#060D0A]/95 backdrop-blur-xl border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.9)] max-h-[calc(100vh-5rem)] overflow-y-auto"
             >
-              {/* Drawer header */}
-              <div className="flex items-center justify-between px-5 h-14 border-b border-white/[0.07] shrink-0">
-                <Link to="/" onClick={closeMenu} className="flex items-center">
-                  <img src="/logo.png" alt="AICSSYC 2026" className="h-7 w-auto object-contain" />
-                </Link>
-                <button
-                  aria-label="Close menu"
-                  onClick={closeMenu}
-                  className="flex items-center justify-center w-8 h-8 rounded-lg text-ivory/70 hover:text-ivory hover:bg-white/10 transition-colors"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              {/* Gradient accent strip */}
-              <div className="h-px bg-gradient-to-r from-gold/40 via-emerald/30 to-transparent shrink-0" />
-
-              {/* Nav links */}
-              <div className="flex-1 px-4 py-5 flex flex-col gap-1">
-                <p className="text-[0.65rem] font-semibold tracking-[0.12em] uppercase text-ivory/35 px-4 mb-2">
-                  Navigation
-                </p>
-                {links.map((l, i) => (
-                  <motion.div
-                    key={l.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.04, duration: 0.25 }}
+              <div className="flex flex-col gap-4">
+                {/* Header inside Sheet */}
+                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <span className="text-[11px] uppercase tracking-widest text-[#E2B767] font-mono flex items-center gap-2">
+                    <Sparkles size={13} /> AICSSYC 2026 Menu
+                  </span>
+                  <button
+                    onClick={closeMenu}
+                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full text-white/70 hover:text-white"
+                    aria-label="Close Menu"
                   >
-                    <NavLink href={l.href} label={l.label} mobile onClick={closeMenu} />
-                  </motion.div>
-                ))}
-              </div>
+                    <X size={18} />
+                  </button>
+                </div>
 
-              {/* CTA buttons */}
-              <div className="px-4 pb-8 pt-4 border-t border-white/[0.07] flex flex-col gap-2.5 shrink-0">
-                <p className="text-[0.65rem] font-semibold tracking-[0.12em] uppercase text-ivory/35 px-4 mb-1">
-                  Quick Actions
-                </p>
-                <Link
-                  to="/ambassador"
-                  onClick={closeMenu}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-ivory/20 bg-ivory/5 px-5 py-3 text-sm font-medium text-ivory hover:bg-ivory/10 hover:border-ivory/35 transition-all"
-                >
-                  Become an Ambassador
-                </Link>
-                <Link
-                  to="/"
-                  hash="tickets"
-                  onClick={closeMenu}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 py-3 text-sm font-semibold text-midnight-deep shadow-[0_0_20px_rgba(212,166,60,0.35)] hover:bg-gold-soft transition-all"
-                >
-                  Secure Your Spot →
-                </Link>
+                {/* Nav Links */}
+                <nav className="flex flex-col gap-1 py-1">
+                  {navItems.map((item) => {
+                    const isActive = activeSection === item.href.replace("#", "");
+                    return (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        onClick={closeMenu}
+                        className={`min-h-[44px] px-4 py-2.5 rounded-2xl text-sm font-medium transition-all flex items-center justify-between ${
+                          isActive
+                            ? "bg-[#E2B767]/15 text-[#E2B767] font-semibold border border-[#E2B767]/30"
+                            : "text-white/85 hover:text-white hover:bg-white/5 active:bg-white/10"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${isActive ? "bg-[#E2B767]" : "bg-white/20"}`}
+                          />
+                          {item.label}
+                        </span>
+                        <span className="text-xs text-[#E2B767] font-bold">→</span>
+                      </a>
+                    );
+                  })}
+                </nav>
+
+                {/* Bottom Sheet CTAs */}
+                <div className="pt-3 border-t border-white/10 flex flex-col gap-2.5">
+                  <a
+                    href="https://aicssyc.ieeecssrm.in/ambassador"
+                    onClick={closeMenu}
+                    className="min-h-[44px] bg-[#E2B767]/15 hover:bg-[#E2B767]/25 text-[#E2B767] border border-[#E2B767]/40 font-semibold py-3 px-5 rounded-2xl text-center text-xs flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(226,183,103,0.15)]"
+                  >
+                    <span>Campus Ambassador</span>
+                    <ArrowRight size={14} />
+                  </a>
+
+                  <a
+                    href="#tickets"
+                    onClick={closeMenu}
+                    className="min-h-[44px] bg-[#E2B767] hover:bg-[#d6aa5a] text-[#060D0A] font-semibold py-3 px-5 rounded-2xl text-center text-xs flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(226,183,103,0.35)]"
+                  >
+                    <span>Get Delegate Passes</span>
+                    <ArrowRight size={15} />
+                  </a>
+
+                  <Link
+                    to="/sponsor"
+                    onClick={closeMenu}
+                    className="min-h-[44px] btn-secondary-glass py-3 px-5 rounded-2xl text-center text-xs font-medium flex items-center justify-center gap-2"
+                  >
+                    <span>Partner &amp; Sponsor</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </>

@@ -73,28 +73,115 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const eventJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: "AICSSYC 2026 - All India Computer Society Student & Young Professional Congress",
+  alternateName: "AICSSYC 2026",
+  description:
+    "The flagship IEEE Computer Society SYP Congress 2026 at SRM IST Kattankulathur with the theme 'Where Agents Meet Humans'. Featuring distinguished keynotes, hands-on workshops, AI tracks, and networking.",
+  startDate: "2026-10-08T09:00:00+05:30",
+  endDate: "2026-10-11T18:00:00+05:30",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  image: ["https://aicssyc.ieeecssrm.in/banner.jpg", "https://aicssyc.ieeecssrm.in/logo.png"],
+  location: {
+    "@type": "Place",
+    name: "Dr. TP Ganesan Auditorium, SRM Institute of Science and Technology",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "SRM Nagar, Kattankulathur",
+      addressLocality: "Chengalpattu",
+      addressRegion: "Tamil Nadu",
+      postalCode: "603203",
+      addressCountry: "IN",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 12.823033,
+      longitude: 80.040183,
+    },
+  },
+  organizer: {
+    "@type": "Organization",
+    name: "IEEE Computer Society SRM IST Student Branch Chapter",
+    url: "https://aicssyc.ieeecssrm.in",
+    email: "ieeecomputersocietysrmist@gmail.com",
+    sameAs: ["https://www.instagram.com/ieeecs_srmist/"],
+  },
+  offers: {
+    "@type": "AggregateOffer",
+    url: "https://aicssyc.ieeecssrm.in/#tickets",
+    priceCurrency: "INR",
+    availability: "https://schema.org/InStock",
+    validFrom: "2026-01-01T00:00:00+05:30",
+  },
+};
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "All India Computer Society Student & Young Professional Congress 2026" },
-      { name: "description", content: "AICSSYC 2026 — the IEEE Computer Society SYP Congress at SRM IST, Kattankulathur, 8–11 October 2026." },
-      { name: "author", content: "IEEE Computer Society SYP" },
-      { property: "og:title", content: "All India Computer Society Student & Young Professional Congress 2026" },
-      { property: "og:description", content: "IEEE CS SYP Congress 2026 · SRM IST, Kattankulathur · 8–11 October. Theme: Where Agents Meet Humans." },
+      { title: "AICSSYC 2026 | IEEE Computer Society SYP Congress | SRM IST" },
+      {
+        name: "description",
+        content:
+          "Join AICSSYC 2026 at TP Ganesan Auditorium, SRM IST (8–11 Oct 2026). Discover keynotes, workshops & networking at India's premier IEEE CS congress.",
+      },
+      {
+        name: "keywords",
+        content:
+          "AICSSYC 2026, IEEE Computer Society, SYP Congress, SRM IST, TP Ganesan Auditorium, AI conference, Kattankulathur, Where Agents Meet Humans",
+      },
+      { name: "author", content: "IEEE Computer Society SRM IST" },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "theme-color", content: "#060D0A" },
+      {
+        property: "og:title",
+        content: "AICSSYC 2026 — IEEE Computer Society SYP Congress",
+      },
+      {
+        property: "og:description",
+        content:
+          "Join India's premier IEEE Computer Society congress at SRM IST, Kattankulathur (8–11 Oct 2026). Experience keynotes, AI tracks, and national networking.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "AICSSYC 2026" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "All India Computer Society Student & Young Professional Congress 2026" },
-      { name: "twitter:description", content: "IEEE CS SYP Congress 2026 · SRM IST · 8–11 October. Where Agents Meet Humans." },
+      { property: "og:url", content: "https://aicssyc.ieeecssrm.in/" },
       { property: "og:image", content: "https://aicssyc.ieeecssrm.in/banner.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: "AICSSYC 2026 Banner — Where Agents Meet Humans at SRM IST",
+      },
+      { property: "og:locale", content: "en_IN" },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "AICSSYC 2026 — IEEE Computer Society SYP Congress",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "India's flagship IEEE CS SYP congress at SRM IST (8–11 Oct 2026). Keynotes, workshops & innovation under 'Where Agents Meet Humans'.",
+      },
       { name: "twitter:image", content: "https://aicssyc.ieeecssrm.in/banner.jpg" },
     ],
     links: [
+      { rel: "canonical", href: "https://aicssyc.ieeecssrm.in/" },
+      { rel: "icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/logo.png" },
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(eventJsonLd),
       },
     ],
   }),
